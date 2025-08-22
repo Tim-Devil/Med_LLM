@@ -1,0 +1,11 @@
+monai
+
+nibabel
+simpleitk
+scikit-image
+
+numpy
+scipy
+
+pillow==11.0.0
+matplotlib==3.10.5

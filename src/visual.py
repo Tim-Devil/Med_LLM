@@ -9,13 +9,7 @@ def create_comparison_figure(original_slice, original_mask_slice,
     """
     创建一个 2x2 的对比图，用于展示 resize 前后的影像和掩膜。
 
-    本函数只负责生成图形对象，不负责保存或显示。
-
-    参数:
-        ... (所有用于绘图的数据) ...
-
-    返回:
-        matplotlib.figure.Figure: 包含四张子图的图形对象。
+    只负责生成图形对象，不负责保存或显示。
     """
     # 归一化CT影像以便于可视化
     norm_orig_slice = _normalize_ct_image(original_slice)

@@ -10,7 +10,7 @@ def load_data(base_dir, img_id, sub_id, verbose=False):
 
     img_id = str(img_id)
     sub_id = str(sub_id)
-    # 必要的鲁棒性处理
+    # 必要鲁棒性
 
     image_path = os.path.join(base_dir, "train_fixed", folder_name, subfolder_name, file_name)
     mask_path = os.path.join(base_dir, "ts_seg", "ts_total", "train_fixed", folder_name, subfolder_name, file_name)
@@ -23,16 +23,13 @@ def load_data(base_dir, img_id, sub_id, verbose=False):
         image_nii = nib.load(image_path)
         image_data = image_nii.get_fdata()
 
-        # 2. 加载掩膜
         if verbose: print(f"正在处理掩膜")
         mask_nii = nib.load(mask_path)
         mask_data = mask_nii.get_fdata()
 
-        # 3. 验证尺寸是否匹配
         if image_data.shape != mask_data.shape:
             print(f"警告: 文件 {file_name} 的影像和掩膜尺寸不匹配！")
             
-        # 4. 根据 verbose 参数决定是否打印详细信息
         if verbose:
             print("--- 影像信息 ---")
             print(f"影像尺寸 (Shape): {image_data.shape}")
@@ -50,7 +47,6 @@ def load_data(base_dir, img_id, sub_id, verbose=False):
         if not verbose:
             print(f"加载完成: {file_name}")
 
-        # 5. 返回包含所有必要数据的字典
         return {
             "image_data": image_data,
             "mask_data": mask_data,
