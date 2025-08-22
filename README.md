@@ -53,16 +53,17 @@ The hierarchy of this proj is displayed below:
 Be notified that modifying data path in `main.py` is necessary!!!
 
 - `src/data.py`
-  
+
   Designed for dataset load.
 - `src/_data.test.py`
-  
+
   If you are bewildered by the hierarchy of dataset, you can use this script to test if data.py is able to load data correctly.
 - `src/visual.py`
-  
+
   visualize module used by main.py.
 - `main.py`
-  
+
+
   main program. `--visual` is an optional parameter to visualize pic while program running.
   You may not need it because the pic will be saved. Do not forget to change saving path in main.py
 
