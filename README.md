@@ -33,7 +33,6 @@ The hierarchy of this proj is displayed below:
 │   │                   └── train_10016
 │   │                       └── train_10016_a
 │   │                           └── train_10016_a_1.nii.gz
-│   └── get_1w.py
 ├── model
 ├── processing_output_pic
 │   ├── resize_comparison_train_100_a_1.png
@@ -53,13 +52,17 @@ The hierarchy of this proj is displayed below:
 
 Be notified that modifying data path in `main.py` is necessary!!!
 
-- src/data.py
+- `src/data.py`
+  
   Designed for dataset load.
-- src/_data.test.py
+- `src/_data.test.py`
+  
   If you are bewildered by the hierarchy of dataset, you can use this script to test if data.py is able to load data correctly.
-- src/visual.py
+- `src/visual.py`
+  
   visualize module used by main.py.
-- main.py
+- `main.py`
+  
   main program. `--visual` is an optional parameter to visualize pic while program running.
   You may not need it because the pic will be saved. Do not forget to change saving path in main.py
 
@@ -71,4 +74,6 @@ To run this program, you should:
 > In `requirements.txt` I do not include pytorch, since it is CUDA-sensitive and...No need for more word.
 > 
 > Be very cautious because monai package is very very possible to conflict with other package so conda is recommended and you should install monai first!
+
+
 
