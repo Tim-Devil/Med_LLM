@@ -63,6 +63,7 @@ Be notified that modifying data path in `main.py` is necessary!!!
   visualize module used by main.py.
 - `main.py`
 
+
   main program. `--visual` is an optional parameter to visualize pic while program running.
   You may not need it because the pic will be saved. Do not forget to change saving path in main.py
 
@@ -74,4 +75,6 @@ To run this program, you should:
 > In `requirements.txt` I do not include pytorch, since it is CUDA-sensitive and...No need for more word.
 > 
 > Be very cautious because monai package is very very possible to conflict with other package so conda is recommended and you should install monai first!
+
+
 

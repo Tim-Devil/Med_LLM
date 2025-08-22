@@ -129,9 +129,20 @@ def main():
         resized_image = resize_image(original_image, monai_transform)
         resized_mask = resize_mask(original_mask, monai_transform)
         
-        # 准备可视化所需的数据切片
-        slice_idx_original = original_shape_3d[2] // 2
-        slice_idx_resized = target_shape_3d[2] // 2 # 使用新的目标深度
+        slice_idx_original = original_shape_3d[2] // 2 
+        
+        if original_shape_3d[2] > 1:
+            relative_position = slice_idx_original / (original_shape_3d[2] - 1)
+        else:
+            relative_position = 0
+        
+        if target_shape_3d[2] > 1:
+            slice_idx_resized = int(round(relative_position * (target_shape_3d[2] - 1)))
+        else:
+            slice_idx_resized = 0
+            
+        slice_idx_resized = max(0, min(slice_idx_resized, target_shape_3d[2] - 1))
+
 
         original_slice = original_image[:, :, slice_idx_original]
         original_mask_slice = original_mask[:, :, slice_idx_original]
