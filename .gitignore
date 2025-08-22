@@ -1,0 +1,7 @@
+data/
+model/
+
+__pycache__/       # 忽略 Python 字节码缓存目录
+*.pyc              # 忽略编译后的 Python 文件
+*.ipynb_checkpoints/ # Jupyter Notebook 检查点文件
+.ipynb_checkpoints/ # 同样是为了捕获不同层次的检查点
