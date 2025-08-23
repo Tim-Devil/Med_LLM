@@ -5,9 +5,11 @@ import argparse
 import torch
 from scipy.ndimage import zoom
 from scipy.ndimage import find_objects
+import nibabel as nib
 
 from visual import create_comparison_figure
 from data import load_data
+from bbox_extractor import extract_organ_bboxes
 
 import monai.transforms as mtf
 
@@ -105,7 +107,7 @@ def main():
 
     # 这里未来打算做一个扫描 + 遍历，subid只有1和2。
     #目前只做了单图片的选择。应该，很好改的。
-    test_img_id = '1'
+    test_img_id = '10'
     test_sub_id = '1'
 
     monai_target_size = [TARGET_SHAPE_3D[2], TARGET_SHAPE_3D[1], TARGET_SHAPE_3D[0]]
@@ -125,10 +127,33 @@ def main():
         target_shape_3d = TARGET_SHAPE_3D
         print(f"处理文件: {file_name}")
         print(f"原始尺寸: {original_shape_3d} -> 目标尺寸: {target_shape_3d}")
+
+        # 新增创建生成文件夹。用于保存各类信息。
+        img_output_dir = os.path.join(OUTPUT_DIR, file_name.replace('.nii.gz', ''))
+        pic_dir = os.path.join(img_output_dir, 'pic')
+        mask_dir = os.path.join(img_output_dir, 'mask')
+        os.makedirs(img_output_dir, exist_ok=True)
+        os.makedirs(pic_dir, exist_ok=True)
+        os.makedirs(mask_dir, exist_ok=True)
         
+        # resize主要逻辑。
         resized_image = resize_image(original_image, monai_transform)
         resized_mask = resize_mask(original_mask, monai_transform)
+
+        # 保存nii.gz代码
+        resized_img_nii = nib.Nifti1Image(resized_image, data_pack["affine"])
+        resized_mask_nii = nib.Nifti1Image(resized_mask, data_pack["affine"])
+        nib.save(resized_img_nii, os.path.join(pic_dir, file_name))
+        nib.save(resized_mask_nii, os.path.join(mask_dir, file_name))
+        print(f"Resize 后的图像已保存至: {os.path.join(pic_dir, file_name)}")
+        print(f"Resize 后的掩码已保存至: {os.path.join(mask_dir, file_name)}")
+
+        # 保存json文件
+        bbox_json_path = os.path.join(img_output_dir, f"{file_name.replace('.nii.gz', '')}.json")
+        extract_organ_bboxes(resized_mask, file_name.replace('.nii.gz', ''), bbox_json_path)
         
+        # 可视化逻辑：取50%的层用于对比呈现。
+        # 如果不用--visual就无关。
         slice_idx_original = original_shape_3d[2] // 2 
         
         if original_shape_3d[2] > 1:
@@ -155,15 +180,11 @@ def main():
             original_shape_3d, target_shape_3d, slice_idx_original, file_name
         )
 
-        # 保存逻辑
-        output_filename = os.path.join(OUTPUT_DIR, f"resize_comparison_{file_name.replace('.nii.gz', '')}.png")
-        comparison_figure.savefig(output_filename)
-        print(f"对比图已保存至: {output_filename}")
-
-        # 显示逻辑
+        # 保存图片逻辑
         if args.visualize:
-            print("参数 '--visualize' 已设置，正在显示结果窗口...")
-            plt.show()
+            output_filename = os.path.join(img_output_dir, f"resize_comparison_{file_name.replace('.nii.gz', '')}.png")
+            comparison_figure.savefig(output_filename)
+            print(f"参数 '--visualize' 已设置，对比图已保存至: {output_filename}")
         
         plt.close(comparison_figure)
 
